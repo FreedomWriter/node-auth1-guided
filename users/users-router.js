@@ -1,13 +1,24 @@
-const router = require('express').Router();
+const router = require("express").Router();
 
-const Users = require('./users-model.js');
+const usersModel = require("./users-model.js");
 
-router.get('/', (req, res) => {
-  Users.find()
-    .then(users => {
-      res.json(users);
-    })
-    .catch(err => res.send(err));
+function restricted() {
+  return async (req, res, next) => {
+    try {
+      //authorize the user here
+    } catch (err) {
+      next(err);
+    }
+  };
+}
+
+router.get("/", async (req, res, next) => {
+  try {
+    const users = await usersModel.find();
+    res.json(users);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

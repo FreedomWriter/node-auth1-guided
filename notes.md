@@ -57,3 +57,24 @@ Adding a random string (though it is not truly random because it needs to be abl
     }
 
 //rounds is 2^16 === 65,536 times, a bit high. optimal is where it takes about 1 second
+
+# To validate a hased password on login
+
+    router.post("/login", async (req, res, next) => {
+        try {
+            const { username, password } = req.body;
+
+            const user = await usersModel.findBy({ username }).first();
+
+            const passwordValid = await bycrypt.compare(password, user.password);
+
+            if (user && passwordValid) {
+            res.status(200).json({ message: `Welcome ${user.username}!` });
+            } else {
+            res.status(401).json({ message: "Invalid Credentials" });
+            }
+
+        } catch (err) {
+            next(err);
+        }
+    });

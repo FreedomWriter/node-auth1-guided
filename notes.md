@@ -5,17 +5,17 @@ Authorization/AuthZ is when our servers knows who you are, and is determining wh
 
 # Core Principles for Authentication
 
- - requiring strong passwords
- - properly storing passwords
- - preventing brute force attacks
+- requiring strong passwords
+- properly storing passwords
+- preventing brute force attacks
 
-hashing
--------
+## hashing
+
 hash("hello world") == "5fauidhay4t89qy4t8qn-4q-84tq4394ugis"
 hashing is not encryption, it is a one way, irreversible process. Think of it like a finger print for a small string of data. It's unique.
 
-examples of hashers (probably not spelled correctly)
--------------------
+## examples of hashers (probably not spelled correctly)
+
 MD5
 shaw1
 shaw256
@@ -24,8 +24,7 @@ argon
 
 Red Flag - when an app tries to limit the length of your password. They are likely not hashing. No matter the length of the string, the hash is the same length. They are probably storing it encrypted (bad because it is reversable, if hackers get the secret key they can reverse the encryption) or as plain text.
 
-Brute Forcing
--------------
+## Brute Forcing
 
 Attackers attempt to guess a password over and over and over again. They use programs that can do this millions of guesses per seconds.
 
@@ -36,12 +35,25 @@ One of the things we can do is to try to intentionally slow down our code. We ca
 100,000,000 hashes at 2 milliseconds per hash = 55 hours
 100,000,000 hashes at 2 seconds per hash = 6 years
 
-Key Derivation Function
------------------------
+## Key Derivation Function
+
 Hash + Time = New Hash
 
 [Bcrypt](https://www.npmjs.com/package/bcryptjs) is a key derivation library (Bcrypt is not an encryption library, it is a hashing library).
 
-Salting
--------
+## Salting
+
 Adding a random string (though it is not truly random because it needs to be able to be reproduced)
+
+# To hash password using bcryptjs in the userModel on post
+
+    npm i bcryptjs
+    const bcrypt = require("bcryptjs")
+
+    async function add(user) {
+        user.password = await bcrypt.hash(user.password, 16)
+        const [id] = await db("users").insert(user);
+        return findById(id);
+    }
+
+//rounds is 2^16 === 65,536 times, a bit high. optimal is where it takes about 1 second

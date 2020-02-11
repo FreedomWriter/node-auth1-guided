@@ -7,7 +7,6 @@ const router = require("express").Router();
 const authRouter = require("../auth/auth-router.js");
 const usersRouter = require("../users/users-router.js");
 
-// const apiRouter = require('./api-router.js');
 const configureMiddleware = require("./configure-middleware.js");
 
 const server = express();
@@ -17,8 +16,6 @@ server.use(cors());
 server.use(express.json());
 
 configureMiddleware(server);
-
-// server.use("/api", apiRouter);
 
 server.use("/auth", authRouter);
 server.use("/users", usersRouter);

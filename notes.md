@@ -1,5 +1,7 @@
 # Authentication Notes
 
+## [12 Best Practices For User Account, Authorization and Password Management](https://cloud.google.com/blog/products/gcp/12-best-practices-for-user-account) By Ian Maddox
+
 Authentication/AuthN is when our website verifies the identity of the user
 Authorization/AuthZ is when our servers knows who you are, and is determining whether you have permission to access the requested resources
 

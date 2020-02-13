@@ -112,6 +112,17 @@ Adding a random string (though it is not truly random because it needs to be abl
 
 # Sessions [(express-sessions)](https://github.com/expressjs/session#readme)
 
+## Session/Cookie Flow:
+
+- Client sends credentials to server
+- Server verifies credentials
+- Server creates a session for the client
+- Server sends back cookie as header (Set-Cookie header)
+- Client stores thecookie in it's cookie jar
+- Client sends all cookies in the cookie jar on every request
+- Server verifies the cookies is valid
+- Server provides access to resource
+
 Allows us to create sessions in memomry on our machine:
 
     npm i express-session
@@ -146,13 +157,44 @@ The session function can take an options object:
         })
     );
 
-## Session/Cookie Flow:
+Updated restricted middleware:
 
-- Client sends credentials to server
-- Server verifies credentials
-- Server creates a session for the client
-- Server sends back cookie as header (Set-Cookie header)
-- Client stores thecookie in it's cookie jar
-- Client sends all cookies in the cookie jar on every request
-- Server verifies the cookies is valid
-- Server provides access to resource
+    module.exports = () => {
+        const authError = {
+            message: "Invalid Credentials"
+        };
+
+        return (req, res, next) => {
+            if (!req.session || !req.session.user) {
+            return res.status(401).json(authError);
+            }
+
+            next();
+        };
+    };
+
+Updated protected route:
+
+    router.get("/protected", restricted(), async (req, res, next) => {
+        try {
+            res.json({
+            message: "You are authorized"
+            });
+        } catch (err) {
+            next(err);
+        }
+    });
+
+Logout:
+
+    router.get("/logout", restricted(), (req, res, next) => {
+        req.session.destroy(err => {
+            if (err) {
+            next(err);
+            } else {
+            res.json({
+                message: "You are logged out"
+            });
+            }
+        });
+    });

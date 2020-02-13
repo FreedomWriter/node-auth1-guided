@@ -1,7 +1,4 @@
-const usersModel = require("../users/users-model");
-const bycrypt = require("bcryptjs");
-
-function restricted() {
+module.exports = () => {
   const authError = {
     message: "Invalid Credentials"
   };
@@ -13,6 +10,4 @@ function restricted() {
 
     next();
   };
-}
-
-module.exports = restricted;
+};

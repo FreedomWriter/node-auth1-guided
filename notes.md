@@ -137,6 +137,22 @@ The session function can take an options object:
         session({
             resave: false, //keep it false to avoid recreating sessions that have not changed
             saveUninitialized: false, // GDPR laws agains setting cookies automatically
-            secret: "keep it secret, keep it safe!" // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+            secret: "keep it secret, keep it safe!", // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+            cookie: {
+            httpOnly: true, //javascript can't access the contents of the cookie
+            maxAge: 1000 * 60 * 60 * 25 * 7, //logs user out after 7 days
+            secure: false // in prod this should be true so the cookie header is encrypted
+            }
         })
     );
+
+## Session/Cookie Flow:
+
+- Client sends credentials to server
+- Server verifies credentials
+- Server creates a session for the client
+- Server sends back cookie as header (Set-Cookie header)
+- Client stores thecookie in it's cookie jar
+- Client sends all cookies in the cookie jar on every request
+- Server verifies the cookies is valid
+- Server provides access to resource

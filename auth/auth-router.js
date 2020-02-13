@@ -1,5 +1,6 @@
 const express = require("express");
 const bycrypt = require("bcryptjs");
+const restricted = require("../middleware/restricted");
 
 const usersModel = require("../users/users-model.js");
 
@@ -37,13 +38,8 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/protected", async (req, res, next) => {
+router.get("/protected", restricted(), async (req, res, next) => {
   try {
-    if (!req.session || !req.session.user) {
-      return res.status(403).json({
-        message: "You are not authorized"
-      });
-    }
     res.json({
       message: "You are authorized"
     });

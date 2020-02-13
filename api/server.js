@@ -18,7 +18,12 @@ server.use(
   session({
     resave: false, //keep it false to avoid recreating sessions that have not changed
     saveUninitialized: false, // GDPR laws agains setting cookies automatically
-    secret: "keep it secret, keep it safe!" // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+    secret: "keep it secret, keep it safe!", // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+    cookie: {
+      httpOnly: true, //javascript can't access the contents of the cookie
+      maxAge: 1000 * 60 * 60 * 25 * 7, //logs user out after 7 days
+      secure: false // in prod this should be true so the cookie header is encrypted
+    }
   })
 );
 

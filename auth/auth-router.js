@@ -46,7 +46,7 @@ router.get("/protected", async (req, res, next) => {
     const { token } = req.headers;
     if (!token || !tokens[token]) {
       return res.status(403).json({
-        message: "You are authorized"
+        message: "You are not authorized"
       });
     }
     res.json({

@@ -1,3 +1,6 @@
+const usersModel = require("../users/users-model");
+const bycrypt = require("bcryptjs");
+
 function restricted() {
   const authError = {
     message: "Invalid Credentials"

@@ -25,9 +25,10 @@ server.get("/", (req, res) => {
 });
 
 server.use((err, req, res, next) => {
-  console.log("Error: ", err);
+  console.log("Error: ", err.message);
   res.status(500).json({
-    message: "Something went wrong"
+    message: "Something went wrong",
+    error: err.message
   });
 });
 

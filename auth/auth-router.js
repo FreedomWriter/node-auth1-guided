@@ -30,4 +30,13 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
+router.get("/protected", async (req, res, next) => {
+  try {
+    res.json({
+      message: "You are authorized"
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;

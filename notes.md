@@ -131,4 +131,12 @@ Allows us to create sessions in memomry on our machine:
       });
     }
 
-the session function can take an options object
+The session function can take an options object:
+
+    server.use(
+        session({
+            resave: false, //keep it false to avoid recreating sessions that have not changed
+            saveUninitialized: false, // GDPR laws agains setting cookies automatically
+            secret: "keep it secret, keep it safe!" // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+        })
+    );

@@ -2,7 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
-const router = require("express").Router();
+const session = require("express-session");
 
 const authRouter = require("../auth/auth-router.js");
 const usersRouter = require("../users/users-router.js");
@@ -14,6 +14,13 @@ server.use(morgan("dev"));
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
+server.use(
+  session({
+    resave: false, //keep it false to avoid recreating sessions that have not changed
+    saveUninitialized: false, // GDPR laws agains setting cookies automatically
+    secret: "keep it secret, keep it safe!" // to cryptographically sign the cookie, should abstract into an environment variable (.env)
+  })
+);
 
 configureMiddleware(server);
 

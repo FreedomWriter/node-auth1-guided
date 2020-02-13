@@ -109,3 +109,16 @@ Adding a random string (though it is not truly random because it needs to be abl
             }
         };
     }
+
+# Sessions [(express-sessions)](https://github.com/expressjs/session#readme)
+
+Allows us to create sessions in memomry on our machine:
+
+    npm i express-session
+
+    To be used:
+
+    const session = require('express-session')
+    server.use(session())
+
+the session function can take an options object

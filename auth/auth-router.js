@@ -4,7 +4,6 @@ const bycrypt = require("bcryptjs");
 const usersModel = require("../users/users-model.js");
 
 const router = express.Router();
-const tokens = {};
 
 router.post("/register", async (req, res, next) => {
   try {
@@ -24,13 +23,10 @@ router.post("/login", async (req, res, next) => {
     const passwordValid = await bycrypt.compare(password, user.password);
 
     if (user && passwordValid) {
-      const token = Math.random();
-
-      //tokens at the index of token = user
-      tokens[token] = user;
-      console.log(tokens);
+      // stores the user data in the current session,
+      // so it persists between request
+      req.session.user = user;
       res.status(200).json({
-        tokens: token,
         message: `Welcome ${user.username}!`
       });
     } else {
@@ -43,8 +39,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/protected", async (req, res, next) => {
   try {
-    const { token } = req.headers;
-    if (!token || !tokens[token]) {
+    if (!req.session || !req.session.user) {
       return res.status(403).json({
         message: "You are not authorized"
       });

@@ -121,4 +121,14 @@ Allows us to create sessions in memomry on our machine:
     const session = require('express-session')
     server.use(session())
 
+    In the login router, assign the session to the user:
+    req.session.user = user;
+
+    To validate in protected routes:
+        if (!req.session || !req.session.user) {
+            return res.status(403).json({
+                message: "You are not authorized"
+      });
+    }
+
 the session function can take an options object

@@ -146,12 +146,13 @@ The session function can take an options object:
 
     server.use(
         session({
+            name: "banana", //, sid - changes name so it is not obvious we are using express-session
             resave: false, //keep it false to avoid recreating sessions that have not changed
             saveUninitialized: false, // GDPR laws agains setting cookies automatically
             secret: "keep it secret, keep it safe!", // to cryptographically sign the cookie, should abstract into an environment variable (.env)
             cookie: {
             httpOnly: true, //javascript can't access the contents of the cookie
-            maxAge: 1000 * 60 * 60 * 25 * 7, //logs user out after 7 days
+            maxAge: 1000 * 60 * 60 * 24 * 7, //logs user out after 7 days
             secure: false // in prod this should be true so the cookie header is encrypted
             }
         })
@@ -198,3 +199,35 @@ Logout:
             }
         });
     });
+
+Adding persistance:
+As it stands, the session is stored in memory so everytime the server restarts, we lose our authorization. [Here is a list of express-session compatible stores.](https://github.com/expressjs/session#compatible-session-stores)
+
+`npm i connect-session-knex`
+
+In server.js
+
+    const knexSessionStore = require("connect-session-knex")(session);
+
+Add to sessionConfig:
+
+    const sessionConfig = {
+        name: "banana",
+        resave: false,
+        saveUninitialized: false,
+        secret: "Keep it secret, keep it safe!",
+        cookie: {
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            secure: false
+        },
+        store: new knexSessionStore({
+            knex: require("../data/db.config"),
+            tablename: "sessions",
+            sidfieldname: 'sid',
+            createtable: true,
+            clearInterval: 1000 * 60 * 60
+        })
+    };
+
+This new store config creates a table in the database to store sessions
